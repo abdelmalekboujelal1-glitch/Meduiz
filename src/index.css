@@ -1,0 +1,116 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  
+  /* Medical Dark Forest Theme Palette */
+  --color-med-bg: #0a1a0f;        /* Background */
+  --color-med-card: #0f2317;      /* Cards */
+  --color-med-border: #1a3d25;    /* Borders */
+  --color-med-accent: #00e676;    /* Accent Green */
+  --color-med-accent-dark: #00b85e; /* Accent Dark Green */
+  --color-med-text: #e8f5e9;      /* Main Text */
+  --color-med-text-muted: #6daa80; /* Muted Text */
+  --color-med-text-dim: #3d6b4d;  /* Dim Text */
+  --color-med-input: #081508;     /* Input Background */
+  --color-med-danger: #ff5252;    /* Danger Red */
+  --color-med-warning: #ffab40;   /* Warning Orange */
+}
+
+body {
+  background-color: var(--color-med-bg);
+  color: var(--color-med-text);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-med-border);
+  border-radius: 3px;
+}
+
+/* Markdown Styles */
+.markdown-body {
+  color: var(--color-med-text);
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+.markdown-body h1, 
+.markdown-body h2, 
+.markdown-body h3 {
+  color: var(--color-med-accent);
+  font-weight: 600;
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+}
+
+.markdown-body p {
+  margin-bottom: 0.75em;
+}
+
+.markdown-body ul, 
+.markdown-body ol {
+  padding-left: 1.5em;
+  margin-bottom: 0.75em;
+  list-style-type: disc;
+}
+
+.markdown-body strong {
+  color: var(--color-med-accent);
+  font-weight: 600;
+}
+
+.markdown-body a {
+  color: var(--color-med-accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.markdown-body code {
+  background-color: rgba(0, 230, 118, 0.1);
+  color: var(--color-med-accent);
+  padding: 0.2em 0.4em;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+}
+
+.markdown-body blockquote {
+  border-left: 3px solid var(--color-med-accent);
+  padding-left: 1em;
+  color: var(--color-med-text-muted);
+  font-style: italic;
+}
+
+.markdown-body table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1em;
+  font-size: 0.8em;
+}
+
+.markdown-body th,
+.markdown-body td {
+  border: 1px solid var(--color-med-border);
+  padding: 8px;
+  text-align: left;
+}
+
+.markdown-body th {
+  background-color: rgba(0, 230, 118, 0.1);
+  color: var(--color-med-accent);
+  font-weight: 600;
+}
+
+.markdown-body tr:nth-child(even) {
+  background-color: rgba(255, 255, 255, 0.02);
+}
