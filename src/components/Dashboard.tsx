@@ -21,13 +21,14 @@ import {
   LineChart,
   Line
 } from 'recharts';
-import { format, subDays, isSameDay } from 'date-fns';
+import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { CustomEvent } from '../App';
 import EventModal from './EventModal';
 import Timer from './Timer';
 import { supabase } from '../lib/supabase';
 import { cn } from '../lib/utils';
+import { useCalendar } from '../hooks/useCalendar';
 
 const calculateStreak = (data: Score[]) => {
   if (data.length === 0) {
@@ -83,11 +84,8 @@ interface DashboardProps {
   refreshData: () => void;
   addNotification: (message: string) => void;
   events: CustomEvent[];
-  isEventModalOpen: boolean;
-  setIsEventModalOpen: (isOpen: boolean) => void;
-  selectedDate: Date | null;
-  setSelectedDate: (date: Date | null) => void;
   addEvent: (event: Omit<CustomEvent, 'user_id' | 'id'>) => Promise<void>;
+  deleteEvent: (id: number) => Promise<void>;
 }
 
 export default function Dashboard({
@@ -97,28 +95,23 @@ export default function Dashboard({
   refreshData, 
   addNotification,
   events,
-  isEventModalOpen,
-  setIsEventModalOpen,
-  selectedDate,
-  setSelectedDate,
-  addEvent
+  addEvent,
+  deleteEvent
 }: DashboardProps) {
     const [streak, setStreak] = useState(0);
+    const {
+        selectedDate,
+        isEventModalOpen,
+        setIsEventModalOpen,
+        handleDateClick,
+        handleSaveEvent,
+        handleDeleteEvent,
+        calendarDays,
+    } = useCalendar(scores, events, addEvent, deleteEvent);
 
   useEffect(() => {
     setStreak(calculateStreak(scores));
   }, [scores]);
-
-  const handleDateClick = (date: Date) => {
-    setSelectedDate(date);
-    setIsEventModalOpen(true);
-  };
-
-  const handleSaveEvent = async (event: { title: string; type: string }) => {
-    if (selectedDate) {
-      await addEvent({ ...event, date: selectedDate.toISOString().split('T')[0] });
-    }
-  };
 
 
 
@@ -137,12 +130,19 @@ export default function Dashboard({
   ];
 
   if (scores.length > 0) {
+      const now = new Date();
+      const startOfWeek = new Date(now);
+      startOfWeek.setDate(now.getDate() - (now.getDay() === 0 ? 6 : now.getDay() - 1));
+      startOfWeek.setHours(0, 0, 0, 0);
+
       scores.forEach(s => {
           const date = new Date(s.created_at);
-          const day = date.getDay(); 
-          const index = day === 0 ? 6 : day - 1;
-          if (weeklyActivity[index]) {
-              weeklyActivity[index].qcm += 1;
+          if (date >= startOfWeek) {
+              const day = date.getDay(); 
+              const index = day === 0 ? 6 : day - 1;
+              if (weeklyActivity[index]) {
+                  weeklyActivity[index].qcm += 1;
+              }
           }
       });
   }
@@ -157,7 +157,9 @@ export default function Dashboard({
         <EventModal 
           date={selectedDate} 
           onClose={() => setIsEventModalOpen(false)} 
-          onSave={handleSaveEvent} 
+          onSave={handleSaveEvent}
+          onDelete={handleDeleteEvent}
+          events={events.filter(e => e.date === format(selectedDate, 'yyyy-MM-dd'))}
         />
       )}
       <div className="flex h-full bg-[#0a1a0f] text-[#e8f5e9] font-sans overflow-hidden">
@@ -180,8 +182,8 @@ export default function Dashboard({
             />
             <StatCard 
                 icon={<Clock className="text-[#00e676]" />} 
-                label="En Cours" 
-                value="3" 
+                label="Événements Aujourd'hui" 
+                value={events.filter(e => e.date === new Date().toISOString().split('T')[0]).length.toString()} 
             />
             <StatCard 
                 icon={<Flame className="text-[#00e676]" />} 
@@ -248,7 +250,12 @@ export default function Dashboard({
                 <div className="bg-[#0f2317] border border-[#1a3d25] rounded-2xl overflow-hidden">
                     <div className="p-5 border-b border-[#1a3d25] flex items-center justify-between">
                         <h3 className="font-semibold">Résultats récents</h3>
-                        <button className="text-xs text-[#00e676] hover:underline">Voir tout</button>
+                        <button 
+                          onClick={() => onNavigate?.('qcm')} 
+                          className="text-xs text-[#00e676] hover:underline"
+                        >
+                          Voir tout
+                        </button>
                     </div>
                     <div className="overflow-x-auto">
                         <table className="w-full text-sm text-left">
@@ -307,34 +314,28 @@ export default function Dashboard({
                             <div key={i} className="text-[#6daa80] py-1">{d}</div>
                         ))}
                     </div>
-                    <div className="grid grid-cols-7 gap-1 text-center text-sm">
-                        {Array.from({ length: 30 }).map((_, i) => {
-                            const date = subDays(new Date(), 15 - i);
-                            const isToday = isSameDay(date, new Date());
-                                                        const hasActivity = scores.some(s => isSameDay(new Date(s.created_at), date));
-                            const dateString = format(date, 'yyyy-MM-dd');
-                            const hasEvent = events.some(e => e.date === dateString);
-                            
-                            return (
-                                <div 
-                                    key={i} 
-                                    onClick={() => handleDateClick(date)}
-                                    className={cn(
-                                        "aspect-square flex items-center justify-center rounded-lg cursor-pointer hover:bg-[#1a3d25] transition-colors relative",
-                                        isToday && "bg-[#00e676] text-[#0a1a0f] font-bold hover:bg-[#00e676]",
-                                        !isToday && (hasActivity || hasEvent) && "text-[#00e676]"
-                                    )}
-                                >
-                                    {format(date, 'd')}
-                                    {hasEvent && (
-                                        <div className="absolute top-1 w-1 h-1 rounded-full bg-[#ff5252]"></div>
-                                    )}
-                                    {!isToday && hasActivity && !hasEvent && (
-                                        <div className="absolute bottom-1 w-1 h-1 rounded-full bg-[#00e676]"></div>
-                                    )}
-                                </div>
-                            );
-                        })}
+                    <div className="grid grid-cols-7 gap-1 text-center text-[11px] sm:text-sm">
+                        {calendarDays.map((day, i) => (
+                            <div
+                                key={i}
+                                onClick={() => handleDateClick(day.date)}
+                                className={cn(
+                                    "aspect-square flex items-center justify-center rounded-lg cursor-pointer hover:bg-[#1a3d25]/60 transition-colors relative font-medium",
+                                    {
+                                        "bg-[#00e676] text-[#0a1a0f] font-bold hover:bg-[#00e676]": day.isToday,
+                                        "text-[#00e676]": !day.isToday && day.hasActivity && !day.hasEvent,
+                                        "text-[#0a1a0f] font-bold": day.hasEvent,
+                                    }
+                                )}
+                                style={day.hasEvent ? { backgroundColor: day.eventColor || '#00e676' } : {}}
+                            >
+                                {format(day.date, 'd')}
+                                
+                                {!day.isToday && day.hasActivity && !day.hasEvent && (
+                                    <div className="absolute bottom-1 w-1 h-1 rounded-full bg-[#00e676]"></div>
+                                )}
+                            </div>
+                        ))}
                     </div>
                 </div>
 
