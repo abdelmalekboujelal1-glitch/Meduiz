@@ -51,22 +51,22 @@ export default function Timer({ addNotification }: TimerProps) {
   };
 
   return (
-    <div className="bg-[#0f2317] border border-[#1a3d25] rounded-2xl p-5">
+    <div className="bg-med-card border border-med-border rounded-2xl p-5 transition-colors duration-300">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <Clock size={16} className="text-[#00e676]" />
-          <h3 className="font-semibold">Minuteur d'étude</h3>
+          <Clock size={16} className="text-med-accent" />
+          <h3 className="font-semibold text-med-text">Minuteur d'étude</h3>
         </div>
         <div className={cn(
           "px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider",
-          mode === 'study' ? "bg-[#00e676]/10 text-[#00e676]" : "bg-blue-500/10 text-blue-400"
+          mode === 'study' ? "bg-med-accent/10 text-med-accent" : "bg-blue-500/10 text-blue-400"
         )}>
           {mode === 'study' ? 'Étude' : 'Pause'}
         </div>
       </div>
       
       <div className="text-center mb-6">
-        <div className="text-4xl font-mono font-bold text-[#e8f5e9] tracking-wider">
+        <div className="text-4xl font-mono font-bold text-med-text tracking-wider">
           {formatTime(timeLeft)}
         </div>
       </div>
@@ -74,7 +74,7 @@ export default function Timer({ addNotification }: TimerProps) {
       <div className="flex items-center justify-center gap-4">
         <button 
           onClick={resetTimer}
-          className="p-2 rounded-xl bg-[#0a1a0f] border border-[#1a3d25] text-[#6daa80] hover:text-[#e8f5e9] transition-colors"
+          className="p-2 rounded-xl bg-med-bg border border-med-border text-med-text-muted hover:text-med-text transition-colors"
         >
           <RotateCcw size={20} />
         </button>
@@ -83,8 +83,8 @@ export default function Timer({ addNotification }: TimerProps) {
           className={cn(
             "p-3 rounded-2xl transition-all shadow-lg",
             isActive 
-              ? "bg-[#ff5252] text-white shadow-[#ff5252]/20" 
-              : "bg-[#00e676] text-[#0a1a0f] shadow-[#00e676]/20"
+              ? "bg-med-danger text-white shadow-med-danger/20" 
+              : "bg-med-accent text-med-bg shadow-med-accent/20"
           )}
         >
           {isActive ? <Pause size={24} fill="currentColor" /> : <Play size={24} fill="currentColor" className="ml-0.5" />}

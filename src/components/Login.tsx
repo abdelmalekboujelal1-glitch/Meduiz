@@ -87,17 +87,17 @@ export default function Login({ onLoginSuccess }: LoginProps) {
   };
 
   return (
-    <div className="fixed inset-0 bg-[#0a1a0f] flex items-center justify-center p-4 z-50">
-      <div className="w-full max-w-[380px] bg-[#0f2317] border border-[#1a3d25] rounded-2xl p-8 shadow-2xl">
+    <div className="fixed inset-0 bg-med-bg flex items-center justify-center p-4 z-50 transition-colors duration-300">
+      <div className="w-full max-w-[380px] bg-med-card border border-med-border rounded-2xl p-8 shadow-2xl transition-colors duration-300">
         <div className="flex flex-col items-center mb-6">
-          <Stethoscope size={48} className="text-[#00e676] mb-4" />
-          <h1 className="text-2xl font-bold text-white mb-1">MedUiz</h1>
-          <p className="text-[#6daa80] text-[13px] text-center">
+          <Stethoscope size={48} className="text-med-accent mb-4" />
+          <h1 className="text-2xl font-bold text-med-text mb-1">MedUiz</h1>
+          <p className="text-med-text-muted text-[13px] text-center">
             Assistant médical pour étudiants algériens
           </p>
         </div>
 
-        <div className="h-px w-full bg-[#1a3d25] mb-6" />
+        <div className="h-px w-full bg-med-border mb-6" />
 
         <form onSubmit={isRegistering ? handleRegister : handleLogin} className="space-y-3">
           {isRegistering && (
@@ -106,7 +106,7 @@ export default function Login({ onLoginSuccess }: LoginProps) {
               placeholder="Prénom"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full bg-[#081508] border border-[#1a3d25] rounded-[10px] px-3.5 py-3 text-[#e8f5e9] placeholder-[#3d6b4d] focus:outline-none focus:border-[#00e676] transition-colors"
+              className="w-full bg-med-input border border-med-border rounded-[10px] px-3.5 py-3 text-med-text placeholder-med-text-dim focus:outline-none focus:border-med-accent transition-colors"
               required
             />
           )}
@@ -116,7 +116,7 @@ export default function Login({ onLoginSuccess }: LoginProps) {
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full bg-[#081508] border border-[#1a3d25] rounded-[10px] px-3.5 py-3 text-[#e8f5e9] placeholder-[#3d6b4d] focus:outline-none focus:border-[#00e676] transition-colors"
+            className="w-full bg-med-input border border-med-border rounded-[10px] px-3.5 py-3 text-med-text placeholder-med-text-dim focus:outline-none focus:border-med-accent transition-colors"
             required
           />
 
@@ -125,12 +125,12 @@ export default function Login({ onLoginSuccess }: LoginProps) {
             placeholder="Mot de passe"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full bg-[#081508] border border-[#1a3d25] rounded-[10px] px-3.5 py-3 text-[#e8f5e9] placeholder-[#3d6b4d] focus:outline-none focus:border-[#00e676] transition-colors"
+            className="w-full bg-med-input border border-med-border rounded-[10px] px-3.5 py-3 text-med-text placeholder-med-text-dim focus:outline-none focus:border-med-accent transition-colors"
             required
           />
 
           {error && (
-            <div className="text-[#ff5252] text-xs text-center mt-2 flex items-center justify-center gap-1">
+            <div className="text-med-danger text-xs text-center mt-2 flex items-center justify-center gap-1">
               <AlertCircle size={12} />
               {error}
             </div>
@@ -139,7 +139,7 @@ export default function Login({ onLoginSuccess }: LoginProps) {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-[#00e676] text-[#0a1a0f] font-bold rounded-[10px] py-3.5 mt-2 hover:bg-[#00b85e] transition-colors disabled:opacity-50"
+            className="w-full bg-med-accent text-med-bg font-bold rounded-[10px] py-3.5 mt-2 hover:bg-med-accent-dark transition-colors disabled:opacity-50"
           >
             {loading ? 'Chargement...' : (isRegistering ? "S'inscrire" : 'Se connecter')}
           </button>
@@ -150,7 +150,7 @@ export default function Login({ onLoginSuccess }: LoginProps) {
             setIsRegistering(!isRegistering);
             setError(null);
           }}
-          className="w-full bg-transparent border border-[#1a3d25] text-[#6daa80] font-semibold rounded-[10px] py-3.5 mt-3 hover:bg-[#1a3d25] transition-colors"
+          className="w-full bg-transparent border border-med-border text-med-text-muted font-semibold rounded-[10px] py-3.5 mt-3 hover:bg-med-border transition-colors"
         >
           {isRegistering ? 'Déjà un compte ? Se connecter' : 'Créer un compte'}
         </button>

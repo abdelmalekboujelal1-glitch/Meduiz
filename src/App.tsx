@@ -8,6 +8,9 @@ import Login from './components/Login';
 import Header from './components/Header';
 import RemindersPage from './components/RemindersPage';
 import MedicalCalculator from './components/MedicalCalculator';
+import { THEMES, Theme } from './lib/themes';
+import LoadingScreen from './components/LoadingScreen';
+
 interface Score {
   subject: string;
   score: number;
@@ -34,6 +37,8 @@ export default function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [session, setSession] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [showSplash, setShowSplash] = useState(false);
+  const [splashHasRun, setSplashHasRun] = useState(false);
   const [scores, setScores] = useState<Score[]>([]);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [events, setEvents] = useState<CustomEvent[]>([]);
@@ -41,12 +46,33 @@ export default function App() {
   const [notification, setNotification] = useState<string | null>(null);
   const [notificationsList, setNotificationsList] = useState<string[]>([]);
   const [notifiedEvents, setNotifiedEvents] = useState<Set<number>>(new Set());
+  
+  // Theme State
+  const [currentTheme, setCurrentTheme] = useState<Theme>(THEMES[0]);
 
-  const addNotification = (message: string) => {
+  // Apply Theme Colors
+  useEffect(() => {
+    const root = document.documentElement;
+    const colors = currentTheme.colors;
+    
+    root.style.setProperty('--med-bg', colors.bg);
+    root.style.setProperty('--med-card', colors.card);
+    root.style.setProperty('--med-border', colors.border);
+    root.style.setProperty('--med-accent', colors.accent);
+    root.style.setProperty('--med-accent-dark', colors.accentDark);
+    root.style.setProperty('--med-text', colors.text);
+    root.style.setProperty('--med-text-muted', colors.textMuted);
+    root.style.setProperty('--med-text-dim', colors.textDim);
+    root.style.setProperty('--med-input', colors.input);
+    root.style.setProperty('--med-danger', colors.danger);
+    root.style.setProperty('--med-warning', colors.warning);
+  }, [currentTheme]);
+
+  const addNotification = useCallback((message: string) => {
     setNotification(message);
     setNotificationsList(prev => [message, ...prev].slice(0, 10));
     setTimeout(() => setNotification(null), 5000);
-  };
+  }, []);
 
   const clearNotifications = () => {
     setNotificationsList([]);
@@ -93,7 +119,7 @@ export default function App() {
           .eq('user_id', user.id);
         
         if (eventsError) {
-          if (eventsError.code === 'PGRST204' || eventsError.message.includes('public.events')) {
+          if (eventsError.code === 'PGRST204' || eventsError.code === '42P01' || eventsError.message.includes('public.events')) {
             console.warn("Events table missing, using local storage fallback");
             const localEvents = localStorage.getItem(`events_${user.id}`);
             if (localEvents) setEvents(JSON.parse(localEvents));
@@ -108,22 +134,25 @@ export default function App() {
         const localEvents = localStorage.getItem(`events_${user.id}`);
         if (localEvents) setEvents(JSON.parse(localEvents));
       }
-
-      // Check for today's events
-      const today = new Date().toISOString().split('T')[0];
-      const todayEvents = events.filter(e => e.date === today);
-      if (todayEvents.length > 0) {
-        todayEvents.forEach(e => {
-          if (e.id && !notifiedEvents.has(e.id)) {
-            addNotification(`Rappel: ${e.title} aujourd'hui !`);
-            setNotifiedEvents(prev => new Set(prev).add(e.id!));
-          }
-        });
-      }
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   }, [session]);
+
+  // Separate effect for today's events notifications to avoid stale closures in fetchData
+  useEffect(() => {
+    if (events.length > 0) {
+      const today = new Date().toISOString().split('T')[0];
+      const todayEvents = events.filter(e => e.date === today);
+      
+      todayEvents.forEach(e => {
+        if (e.id && !notifiedEvents.has(e.id)) {
+          addNotification(`Rappel: ${e.title} aujourd'hui !`);
+          setNotifiedEvents(prev => new Set(prev).add(e.id!));
+        }
+      });
+    }
+  }, [events, notifiedEvents]);
 
   const addEvent = async (event: Omit<CustomEvent, 'id' | 'user_id'>) => {
     if (!session?.user) return;
@@ -136,8 +165,8 @@ export default function App() {
         .select();
       
       if (error) {
-        // Check if table is missing
-        if (error.message.includes('public.events')) {
+        // Check if table is missing (42P01 is Postgres code for undefined_table)
+        if (error.code === '42P01' || error.message.includes('public.events')) {
           const newEvent = { ...event, id: Date.now(), user_id: userId };
           const updatedEvents = [...events, newEvent];
           setEvents(updatedEvents);
@@ -177,7 +206,7 @@ export default function App() {
         .eq('id', eventId);
       
       if (error) {
-        if (error.message.includes('public.events')) {
+        if (error.code === '42P01' || error.message.includes('public.events')) {
           const updatedEvents = events.filter(e => e.id !== eventId);
           setEvents(updatedEvents);
           localStorage.setItem(`events_${userId}`, JSON.stringify(updatedEvents));
@@ -224,8 +253,12 @@ export default function App() {
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data, error }) => {
-      if (error) console.error("Session init error:", error);
-      setSession(data?.session ?? null);
+      if (error) {
+        console.error("Session init error:", error);
+        setSession(null);
+      } else {
+        setSession(data?.session ?? null);
+      }
       setLoading(false);
     });
 
@@ -239,8 +272,6 @@ export default function App() {
   useEffect(() => {
     const handleNav = () => {
       setActiveTab('assistant');
-      // We could also set a global state to activate the calculator chip
-      // but let's keep it simple for now as the user can just click it.
     };
     window.addEventListener('navigate-to-assistant-calc', handleNav);
     return () => window.removeEventListener('navigate-to-assistant-calc', handleNav);
@@ -252,26 +283,47 @@ export default function App() {
     }
   }, [session, fetchData]);
 
+  // Trigger splash screen when session is established and it hasn't run yet
+  useEffect(() => {
+    if (session && !splashHasRun && !loading) {
+      setShowSplash(true);
+    }
+  }, [session, splashHasRun, loading]);
+
+  if (showSplash) {
+    return <LoadingScreen onComplete={() => {
+      setShowSplash(false);
+      setSplashHasRun(true);
+    }} />;
+  }
+
   if (loading) {
-    return <div className="h-screen w-full bg-[#0a1a0f] flex items-center justify-center text-[#00e676]">Chargement...</div>;
+    return <div className="h-screen w-full bg-med-bg flex items-center justify-center text-med-accent">Chargement...</div>;
   }
 
   if (!session) {
     return <Login onLoginSuccess={() => {}} />;
   }
 
+  // Prevent dashboard flash while waiting for splash to trigger
+  if (!splashHasRun) {
+    return null;
+  }
+
   return (
-    <div className="h-screen w-full bg-[#0a1a0f] text-white flex flex-col overflow-hidden font-sans">
+    <div className="h-screen w-full bg-med-bg text-med-text flex flex-col overflow-hidden font-sans transition-colors duration-300">
       <Header 
         userName={profile?.name || 'Étudiant'} 
         onResetProgress={handleResetProgress} 
         confirmReset={confirmReset} 
         notifications={notificationsList}
         clearNotifications={clearNotifications}
+        currentTheme={currentTheme}
+        onThemeChange={setCurrentTheme}
       />
       
       {notification && (
-        <div className="fixed top-20 left-1/2 -translate-x-1/2 z-[100] bg-[#00e676] text-[#0a1a0f] px-6 py-3 rounded-2xl font-bold shadow-2xl shadow-[#00e676]/20 animate-bounce">
+        <div className="fixed top-20 left-1/2 -translate-x-1/2 z-[100] bg-med-accent text-med-bg px-6 py-3 rounded-2xl font-bold shadow-2xl shadow-med-accent/20 animate-bounce">
           {notification}
         </div>
       )}

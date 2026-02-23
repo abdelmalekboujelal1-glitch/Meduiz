@@ -19,6 +19,7 @@ export const useCalendar = (
   const handleSaveEvent = async (event: { title: string; type: CustomEvent['type']; color?: string }) => {
     if (selectedDate) {
       await addEvent({ ...event, date: format(selectedDate, 'yyyy-MM-dd') });
+      setIsEventModalOpen(false);
     }
   };
 

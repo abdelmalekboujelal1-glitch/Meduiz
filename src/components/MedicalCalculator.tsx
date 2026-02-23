@@ -1040,14 +1040,14 @@ export default function MedicalCalculator() {
   const result = selectedCalc ? selectedCalc.calculate(values) : null;
 
   return (
-    <div className="flex flex-col h-full bg-[#0a1a0f] text-[#e8f5e9] font-sans overflow-hidden">
-      <div className="p-4 sm:p-6 border-b border-[#1a3d25] bg-[#0a1a0f] sticky top-0 z-10 shrink-0">
+    <div className="flex flex-col h-full bg-med-bg text-med-text font-sans overflow-hidden transition-colors duration-300">
+      <div className="p-4 sm:p-6 border-b border-med-border bg-med-bg sticky top-0 z-10 shrink-0 transition-colors duration-300">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h1 className="text-[16px] sm:text-[18px] font-bold text-white">Calculateurs Médicaux</h1>
-            <p className="text-[#6daa80] text-[10px] sm:text-[12px]">Outils de calcul et scores cliniques.</p>
+            <h1 className="text-[16px] sm:text-[18px] font-bold text-med-text">Calculateurs Médicaux</h1>
+            <p className="text-med-text-muted text-[10px] sm:text-[12px]">Outils de calcul et scores cliniques.</p>
           </div>
-          <Calculator className="text-[#00e676]" size={24} />
+          <Calculator className="text-med-accent" size={24} />
         </div>
         
         {!selectedCalc && (
@@ -1057,13 +1057,13 @@ export default function MedicalCalculator() {
               placeholder="Rechercher un calculateur..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-[#0f2317] border border-[#1a3d25] rounded-xl py-2 px-4 text-sm text-[#e8f5e9] focus:outline-none focus:border-[#00e676]/50"
+              className="w-full bg-med-card border border-med-border rounded-xl py-2 px-4 text-sm text-med-text focus:outline-none focus:border-med-accent/50 transition-colors duration-300"
             />
           </div>
         )}
       </div>
 
-      <div className="flex-1 overflow-y-auto p-4 sm:p-6 pb-24">
+      <div className="flex-1 overflow-y-auto p-4 sm:p-6 pb-32">
         <AnimatePresence mode="wait">
           {!selectedCalc ? (
             <motion.div 
@@ -1080,21 +1080,21 @@ export default function MedicalCalculator() {
                     setSelectedCalc(calc);
                     setValues({});
                   }}
-                  className="w-full bg-[#0f2317] border border-[#1a3d25] rounded-2xl p-4 flex items-center justify-between hover:border-[#00e676]/30 transition-all group"
+                  className="w-full bg-med-card border border-med-border rounded-2xl p-4 flex items-center justify-between hover:border-med-accent/30 transition-all group"
                 >
                   <div className="text-left">
-                    <p className="text-[10px] text-[#6daa80] uppercase font-bold tracking-wider mb-1">{calc.category}</p>
-                    <h3 className="text-sm font-bold text-white group-hover:text-[#00e676] transition-colors">{calc.name}</h3>
+                    <p className="text-[10px] text-med-text-muted uppercase font-bold tracking-wider mb-1">{calc.category}</p>
+                    <h3 className="text-sm font-bold text-med-text group-hover:text-med-accent transition-colors">{calc.name}</h3>
                   </div>
-                  <ChevronRight size={18} className="text-[#1a3d25] group-hover:text-[#00e676] transition-colors" />
+                  <ChevronRight size={18} className="text-med-border group-hover:text-med-accent transition-colors" />
                 </button>
               ))}
 
-              <div className="pt-4 border-t border-[#1a3d25] mt-6">
-                <div className="bg-[#00e676]/5 border border-dashed border-[#00e676]/20 rounded-2xl p-6 text-center">
-                  <Calculator className="mx-auto text-[#00e676]/40 mb-3" size={32} />
-                  <h3 className="text-sm font-bold text-white mb-2">Besoin d'un autre calculateur ?</h3>
-                  <p className="text-xs text-[#6daa80] mb-4 leading-relaxed">
+              <div className="pt-4 border-t border-med-border mt-6">
+                <div className="bg-med-accent/5 border border-dashed border-med-accent/20 rounded-2xl p-6 text-center">
+                  <Calculator className="mx-auto text-med-accent/40 mb-3" size={32} />
+                  <h3 className="text-sm font-bold text-med-text mb-2">Besoin d'un autre calculateur ?</h3>
+                  <p className="text-xs text-med-text-muted mb-4 leading-relaxed">
                     Si vous ne trouvez pas le score ou la formule que vous cherchez, demandez à l'Assistant IA de le construire pour vous.
                   </p>
                   <button 
@@ -1103,7 +1103,7 @@ export default function MedicalCalculator() {
                       // For now just navigate to assistant
                       window.dispatchEvent(new CustomEvent('navigate-to-assistant-calc'));
                     }}
-                    className="bg-[#00e676] text-[#0a1a0f] px-6 py-2 rounded-xl text-xs font-bold hover:bg-[#00e676]/90 transition-all"
+                    className="bg-med-accent text-med-bg px-6 py-2 rounded-xl text-xs font-bold hover:bg-med-accent/90 transition-all"
                   >
                     Demander à l'IA
                   </button>
@@ -1120,21 +1120,27 @@ export default function MedicalCalculator() {
             >
               <button 
                 onClick={() => setSelectedCalc(null)}
-                className="flex items-center gap-2 text-[#6daa80] hover:text-[#00e676] transition-colors text-sm font-medium"
+                className="flex items-center gap-2 text-med-text-muted hover:text-med-accent transition-colors text-sm font-medium"
               >
                 <ArrowLeft size={16} /> Retour à la liste
               </button>
 
-              <div className="bg-[#0f2317] border border-[#1a3d25] rounded-3xl p-6 space-y-6">
-                <div className="border-b border-[#1a3d25] pb-4">
-                  <p className="text-[10px] text-[#6daa80] uppercase font-bold tracking-wider mb-1">{selectedCalc.category}</p>
-                  <h2 className="text-lg font-bold text-white">{selectedCalc.name}</h2>
+              <div className="bg-med-card border border-med-border rounded-3xl p-6 space-y-6 transition-colors duration-300">
+                <div className="border-b border-med-border pb-4">
+                  <p className="text-[10px] text-med-text-muted uppercase font-bold tracking-wider mb-1">{selectedCalc.category}</p>
+                  <h2 className="text-lg font-bold text-med-text">{selectedCalc.name}</h2>
                 </div>
 
                 <div className="space-y-4">
-                  {selectedCalc.fields.map((field) => (
-                    <div key={field.name} className="space-y-2">
-                      <label className="text-xs font-bold text-[#6daa80] uppercase tracking-wide">{field.label}</label>
+                  {selectedCalc.fields.map((field, index) => (
+                    <motion.div 
+                      key={field.name} 
+                      className="space-y-2"
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                    >
+                      <label className="text-xs font-bold text-med-text-muted uppercase tracking-wide">{field.label}</label>
                       <div className="relative">
                         {field.type === 'number' ? (
                           <div className="flex items-center">
@@ -1143,17 +1149,17 @@ export default function MedicalCalculator() {
                               value={values[field.name] || ''}
                               onChange={(e) => handleInputChange(field.name, e.target.value)}
                               placeholder={field.placeholder}
-                              className="w-full bg-[#0a1a0f] border border-[#1a3d25] rounded-xl py-3 px-4 text-sm text-white focus:outline-none focus:border-[#00e676]/50"
+                              className="w-full bg-med-bg border border-med-border rounded-xl py-3 px-4 text-sm text-med-text focus:outline-none focus:border-med-accent/50 transition-colors"
                             />
                             {field.unit && (
-                              <span className="absolute right-4 text-xs font-bold text-[#1a3d25]">{field.unit}</span>
+                              <span className="absolute right-4 text-xs font-bold text-med-border">{field.unit}</span>
                             )}
                           </div>
                         ) : (
                           <select
                             value={values[field.name] || ''}
                             onChange={(e) => handleInputChange(field.name, e.target.value)}
-                            className="w-full bg-[#0a1a0f] border border-[#1a3d25] rounded-xl py-3 px-4 text-sm text-white focus:outline-none focus:border-[#00e676]/50 appearance-none"
+                            className="w-full bg-med-bg border border-med-border rounded-xl py-3 px-4 text-sm text-med-text focus:outline-none focus:border-med-accent/50 appearance-none transition-colors"
                           >
                             <option value="">Sélectionner...</option>
                             {field.options?.map(opt => (
@@ -1162,7 +1168,7 @@ export default function MedicalCalculator() {
                           </select>
                         )}
                       </div>
-                    </div>
+                    </motion.div>
                   ))}
                 </div>
 
@@ -1170,24 +1176,24 @@ export default function MedicalCalculator() {
                   <motion.div 
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    className="bg-[#00e676]/10 border border-[#00e676]/20 rounded-2xl p-6 space-y-4"
+                    className="bg-med-accent/10 border border-med-accent/20 rounded-2xl p-6 space-y-4"
                   >
                     <div className="text-center">
-                      <p className="text-[10px] text-[#00e676] uppercase font-bold tracking-widest mb-1">Résultat</p>
-                      <h3 className="text-3xl font-black text-[#00e676]">{result.result}</h3>
+                      <p className="text-[10px] text-med-accent uppercase font-bold tracking-widest mb-1">Résultat</p>
+                      <h3 className="text-3xl font-black text-med-accent">{result.result}</h3>
                     </div>
                     
-                    <div className="flex items-start gap-3 bg-[#0a1a0f]/50 rounded-xl p-3">
-                      <Info size={16} className="text-[#00e676] shrink-0 mt-0.5" />
+                    <div className="flex items-start gap-3 bg-med-bg/50 rounded-xl p-3">
+                      <Info size={16} className="text-med-accent shrink-0 mt-0.5" />
                       <div>
-                        <p className="text-xs font-bold text-white mb-1">Interprétation</p>
-                        <p className="text-xs text-[#6daa80] leading-relaxed">{result.interpretation}</p>
+                        <p className="text-xs font-bold text-med-text mb-1">Interprétation</p>
+                        <p className="text-xs text-med-text-muted leading-relaxed">{result.interpretation}</p>
                       </div>
                     </div>
 
-                    <div className="pt-4 border-t border-[#00e676]/10">
-                      <p className="text-[9px] text-[#6daa80] uppercase font-bold mb-1">Formule utilisée</p>
-                      <code className="text-[10px] text-[#00e676]/70 font-mono break-all">{result.formula}</code>
+                    <div className="pt-4 border-t border-med-accent/10">
+                      <p className="text-[9px] text-med-text-muted uppercase font-bold mb-1">Formule utilisée</p>
+                      <code className="text-[10px] text-med-accent/70 font-mono break-all">{result.formula}</code>
                     </div>
                   </motion.div>
                 )}

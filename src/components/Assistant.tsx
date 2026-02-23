@@ -136,12 +136,12 @@ export default function Assistant() {
   };
 
   return (
-    <div className="relative h-full bg-[#0a1a0f] text-[#e8f5e9] font-sans">
+    <div className="relative h-full bg-med-bg text-med-text font-sans transition-colors duration-300">
 
       {/* Messages Area */}
       <div 
         id="chat-area"
-        className="fixed top-[56px] left-0 right-0 bottom-[220px] overflow-y-auto p-4 space-y-6 bg-[#0a1a0f] z-0"
+        className="fixed top-16 left-0 right-0 bottom-[220px] overflow-y-auto p-4 space-y-6 bg-med-bg z-0 transition-colors duration-300"
       >
         {messages.map((msg) => (
           <motion.div
@@ -157,24 +157,24 @@ export default function Assistant() {
               <div className="flex flex-col gap-2 w-full">
                 {/* Row 1 */}
                 <div className="flex items-center gap-2">
-                  <Stethoscope size={14} className="text-[#00e676]" />
-                  <span className="text-[11px] font-bold text-[#00e676] tracking-[0.1em] uppercase">ASSISTANT</span>
+                  <Stethoscope size={14} className="text-med-accent" />
+                  <span className="text-[11px] font-bold text-med-accent tracking-[0.1em] uppercase">ASSISTANT</span>
                 </div>
 
                 {/* Row 2 */}
-                <div className="text-[#6daa80] text-[13px]">
+                <div className="text-med-text-muted text-[13px]">
                   Réponse :
                 </div>
 
                 {/* Row 3 */}
-                <div className="bg-[#0f2317] border border-[#1a3d25] rounded-xl p-[14px] shadow-sm text-[#e8f5e9] text-sm leading-relaxed markdown-body">
+                <div className="bg-med-card border border-med-border rounded-xl p-[14px] shadow-sm text-med-text text-sm leading-relaxed markdown-body transition-colors duration-300">
                    {msg.content.trim().startsWith('<div') ? (
                      <div dangerouslySetInnerHTML={{ __html: msg.content }} />
                    ) : (
                      <ReactMarkdown remarkPlugins={[remarkGfm]}>{msg.content}</ReactMarkdown>
                    )}
                    {msg.imageUrl && (
-                      <div className="mt-3 rounded-xl overflow-hidden border border-[#1a3d25]">
+                      <div className="mt-3 rounded-xl overflow-hidden border border-med-border">
                          <img src={msg.imageUrl} alt="Generated content" className="w-full h-auto" />
                       </div>
                    )}
@@ -182,7 +182,7 @@ export default function Assistant() {
               </div>
             ) : (
               <div className="flex flex-col items-end max-w-[85%]">
-                <div className="bg-[#00b85e] text-[#0a1a0f] rounded-2xl rounded-tr-sm px-4 py-3 text-sm leading-relaxed font-medium shadow-md">
+                <div className="bg-med-accent-dark text-med-bg rounded-2xl rounded-tr-sm px-4 py-3 text-sm leading-relaxed font-medium shadow-md transition-colors duration-300">
                   {msg.content}
                 </div>
               </div>
@@ -193,21 +193,21 @@ export default function Assistant() {
            <div className="flex flex-col gap-2 w-full max-w-[90%] md:max-w-[70%] lg:max-w-[60%] mr-auto items-start">
              {/* Row 1 */}
              <div className="flex items-center gap-2">
-               <Stethoscope size={14} className="text-[#00e676]" />
-               <span className="text-[11px] font-bold text-[#00e676] tracking-[0.1em] uppercase">ASSISTANT</span>
+               <Stethoscope size={14} className="text-med-accent" />
+               <span className="text-[11px] font-bold text-med-accent tracking-[0.1em] uppercase">ASSISTANT</span>
              </div>
              
              {/* Row 2 */}
-             <div className="text-[#6daa80] text-[13px]">
+             <div className="text-med-text-muted text-[13px]">
                Réflexion en cours...
              </div>
 
              {/* Row 3 */}
-             <div className="bg-[#0f2317] border border-[#1a3d25] rounded-xl p-[14px] shadow-sm">
+             <div className="bg-med-card border border-med-border rounded-xl p-[14px] shadow-sm transition-colors duration-300">
                 <div className="flex items-center gap-2 px-2">
-                  <div className="w-2 h-2 bg-[#00e676] rounded-full animate-bounce" />
-                  <div className="w-2 h-2 bg-[#00e676] rounded-full animate-bounce [animation-delay:0.2s]" />
-                  <div className="w-2 h-2 bg-[#00e676] rounded-full animate-bounce [animation-delay:0.4s]" />
+                  <div className="w-2 h-2 bg-med-accent rounded-full animate-bounce" />
+                  <div className="w-2 h-2 bg-med-accent rounded-full animate-bounce [animation-delay:0.2s]" />
+                  <div className="w-2 h-2 bg-med-accent rounded-full animate-bounce [animation-delay:0.4s]" />
                 </div>
              </div>
            </div>
@@ -218,15 +218,15 @@ export default function Assistant() {
       {/* Pills Row */}
       <div 
         id="pills-row"
-        className="fixed bottom-[160px] left-0 right-0 px-3 py-2 bg-[#0a1a0f] border-t border-[#1a3d25] z-30 flex gap-2 overflow-x-auto scrollbar-hide"
+        className="fixed bottom-[160px] left-0 right-0 px-3 py-2 bg-med-bg border-t border-med-border z-30 flex gap-2 overflow-x-auto scrollbar-hide transition-colors duration-300"
       >
         <button 
           onClick={() => handleChipClick('Recherche Web')}
           className={cn(
             "flex items-center gap-2 px-4 py-2 rounded-full text-xs font-medium border transition-all whitespace-nowrap",
             activeChip === 'Recherche Web' 
-              ? "bg-[#00e676] text-[#0a1a0f] border-[#00e676] font-bold shadow-[0_0_10px_rgba(0,230,118,0.4)]" 
-              : "bg-[#0f2317] text-[#6daa80] border-[#1a3d25] hover:bg-[#00e676] hover:text-[#0a1a0f] hover:border-[#00e676] hover:font-bold hover:shadow-[0_0_10px_rgba(0,230,118,0.4)]"
+              ? "bg-med-accent text-med-bg border-med-accent font-bold shadow-[0_0_10px_var(--med-accent)]/40" 
+              : "bg-med-card text-med-text-muted border-med-border hover:bg-med-accent hover:text-med-bg hover:border-med-accent hover:font-bold hover:shadow-[0_0_10px_var(--med-accent)]/40"
           )}
         >
           <Search size={14} /> Recherche Web
@@ -236,8 +236,8 @@ export default function Assistant() {
           className={cn(
             "flex items-center gap-2 px-4 py-2 rounded-full text-xs font-medium border transition-all whitespace-nowrap",
             activeChip === 'CAT' 
-              ? "bg-[#00e676] text-[#0a1a0f] border-[#00e676] font-bold shadow-[0_0_10px_rgba(0,230,118,0.4)]" 
-              : "bg-[#0f2317] text-[#6daa80] border-[#1a3d25] hover:bg-[#00e676] hover:text-[#0a1a0f] hover:border-[#00e676] hover:font-bold hover:shadow-[0_0_10px_rgba(0,230,118,0.4)]"
+              ? "bg-med-accent text-med-bg border-med-accent font-bold shadow-[0_0_10px_var(--med-accent)]/40" 
+              : "bg-med-card text-med-text-muted border-med-border hover:bg-med-accent hover:text-med-bg hover:border-med-accent hover:font-bold hover:shadow-[0_0_10px_var(--med-accent)]/40"
           )}
         >
           <FileText size={14} /> Générer CAT
@@ -247,8 +247,8 @@ export default function Assistant() {
           className={cn(
             "flex items-center gap-2 px-4 py-2 rounded-full text-xs font-medium border transition-all whitespace-nowrap",
             activeChip === 'Calculateur' 
-              ? "bg-[#00e676] text-[#0a1a0f] border-[#00e676] font-bold shadow-[0_0_10px_rgba(0,230,118,0.4)]" 
-              : "bg-[#0f2317] text-[#6daa80] border-[#1a3d25] hover:bg-[#00e676] hover:text-[#0a1a0f] hover:border-[#00e676] hover:font-bold hover:shadow-[0_0_10px_rgba(0,230,118,0.4)]"
+              ? "bg-med-accent text-med-bg border-med-accent font-bold shadow-[0_0_10px_var(--med-accent)]/40" 
+              : "bg-med-card text-med-text-muted border-med-border hover:bg-med-accent hover:text-med-bg hover:border-med-accent hover:font-bold hover:shadow-[0_0_10px_var(--med-accent)]/40"
           )}
         >
           <Calculator size={14} /> Calculateur
@@ -267,12 +267,12 @@ export default function Assistant() {
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleSend()}
             placeholder={getPlaceholder()}
-            className="w-full bg-[#081508] border border-[#1a3d25] rounded-2xl py-4 pl-5 pr-14 text-sm text-[#e8f5e9] placeholder-[#3d6b4d] focus:outline-none focus:border-[#00e676]/50 focus:ring-1 focus:ring-[#00e676]/50 transition-all shadow-lg shadow-black/50"
+            className="w-full bg-med-input border border-med-border rounded-2xl py-4 pl-5 pr-14 text-sm text-med-text placeholder-med-text-dim focus:outline-none focus:border-med-accent/50 focus:ring-1 focus:ring-med-accent/50 transition-all shadow-lg shadow-black/50"
           />
           <button 
             onClick={handleSend}
             disabled={!input.trim() || isLoading}
-            className="absolute right-2 p-2 bg-[#00e676]/10 text-[#00e676] rounded-xl hover:bg-[#00e676] hover:text-[#0a1a0f] disabled:opacity-50 transition-all"
+            className="absolute right-2 p-2 bg-med-accent/10 text-med-accent rounded-xl hover:bg-med-accent hover:text-med-bg disabled:opacity-50 transition-all"
           >
             <ArrowUp size={20} strokeWidth={2.5} />
           </button>

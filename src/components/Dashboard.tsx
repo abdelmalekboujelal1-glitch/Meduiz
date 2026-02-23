@@ -162,31 +162,31 @@ export default function Dashboard({
           events={events.filter(e => e.date === format(selectedDate, 'yyyy-MM-dd'))}
         />
       )}
-      <div className="flex h-full bg-[#0a1a0f] text-[#e8f5e9] font-sans overflow-hidden">
+      <div className="flex h-full bg-med-bg text-med-text font-sans overflow-hidden transition-colors duration-300">
       {/* MAIN CONTENT */}
       <div className="flex-1 flex flex-col overflow-hidden">
-        <div className="flex-1 overflow-y-auto p-6">
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6 pb-32">
           {/* GRID LAYOUT */}
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
             
             {/* ROW 1: STATS CARDS */}
             <StatCard 
-                icon={<CheckCircle2 className="text-[#00e676]" />} 
+                icon={<CheckCircle2 className="text-med-accent" />} 
                 label="QCM Complétés" 
                 value={totalQcm.toString()} 
             />
             <StatCard 
-                icon={<TrendingUp className="text-[#00e676]" />} 
+                icon={<TrendingUp className="text-med-accent" />} 
                 label="Score Moyen" 
                 value={`${avgScore}%`} 
             />
             <StatCard 
-                icon={<Clock className="text-[#00e676]" />} 
+                icon={<Clock className="text-med-accent" />} 
                 label="Événements Aujourd'hui" 
                 value={events.filter(e => e.date === new Date().toISOString().split('T')[0]).length.toString()} 
             />
             <StatCard 
-                icon={<Flame className="text-[#00e676]" />} 
+                icon={<Flame className="text-med-accent" />} 
                 label="Série d'étude" 
                 value={streak.toString()} 
                 subValue="Jours consécutifs"
@@ -196,35 +196,35 @@ export default function Dashboard({
             <div className="xl:col-span-3 space-y-6">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     {/* Bar Chart */}
-                    <div className="bg-[#0f2317] border border-[#1a3d25] rounded-2xl p-5">
+                    <div className="bg-med-card border border-med-border rounded-2xl p-5 transition-colors duration-300">
                         <div className="flex items-center justify-between mb-6">
                             <h3 className="font-semibold">Activité QCM</h3>
-                            <select className="bg-[#0a1a0f] border border-[#1a3d25] text-xs rounded-lg px-2 py-1 outline-none text-[#6daa80]">
+                            <select className="bg-med-bg border border-med-border text-xs rounded-lg px-2 py-1 outline-none text-med-text-muted">
                                 <option>Cette semaine</option>
                             </select>
                         </div>
                         <div className="h-64">
                             <ResponsiveContainer width="100%" height="100%">
                                 <BarChart data={weeklyActivity}>
-                                    <CartesianGrid strokeDasharray="3 3" stroke="#1a3d25" vertical={false} />
-                                    <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#6daa80', fontSize: 12}} dy={10} />
-                                    <YAxis axisLine={false} tickLine={false} tick={{fill: '#6daa80', fontSize: 12}} />
+                                    <CartesianGrid strokeDasharray="3 3" stroke="var(--med-border)" vertical={false} />
+                                    <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: 'var(--med-text-muted)', fontSize: 12}} dy={10} />
+                                    <YAxis axisLine={false} tickLine={false} tick={{fill: 'var(--med-text-muted)', fontSize: 12}} />
                                     <Tooltip 
-                                        contentStyle={{backgroundColor: '#0a1a0f', borderColor: '#1a3d25', borderRadius: '8px', color: '#e8f5e9'}}
-                                        itemStyle={{color: '#e8f5e9'}}
-                                        cursor={{fill: '#1a3d25', opacity: 0.4}}
+                                        contentStyle={{backgroundColor: 'var(--med-bg)', borderColor: 'var(--med-border)', borderRadius: '8px', color: 'var(--med-text)'}}
+                                        itemStyle={{color: 'var(--med-text)'}}
+                                        cursor={{fill: 'var(--med-border)', opacity: 0.4}}
                                     />
-                                    <Bar dataKey="qcm" fill="#00e676" radius={[4, 4, 0, 0]} barSize={30} />
+                                    <Bar dataKey="qcm" fill="var(--med-accent)" radius={[4, 4, 0, 0]} barSize={30} />
                                 </BarChart>
                             </ResponsiveContainer>
                         </div>
                     </div>
 
                     {/* Line Chart */}
-                    <div className="bg-[#0f2317] border border-[#1a3d25] rounded-2xl p-5">
+                    <div className="bg-med-card border border-med-border rounded-2xl p-5 transition-colors duration-300">
                         <div className="flex items-center justify-between mb-6">
                             <h3 className="font-semibold">Performance</h3>
-                            <div className="flex items-center gap-2 text-xs text-[#00e676]">
+                            <div className="flex items-center gap-2 text-xs text-med-accent">
                                 <TrendingUp size={14} />
                                 +12% vs semaine passée
                             </div>
@@ -232,14 +232,14 @@ export default function Dashboard({
                         <div className="h-64">
                             <ResponsiveContainer width="100%" height="100%">
                                 <LineChart data={performanceData}>
-                                    <CartesianGrid strokeDasharray="3 3" stroke="#1a3d25" vertical={false} />
-                                    <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#6daa80', fontSize: 12}} dy={10} />
-                                    <YAxis axisLine={false} tickLine={false} tick={{fill: '#6daa80', fontSize: 12}} />
+                                    <CartesianGrid strokeDasharray="3 3" stroke="var(--med-border)" vertical={false} />
+                                    <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: 'var(--med-text-muted)', fontSize: 12}} dy={10} />
+                                    <YAxis axisLine={false} tickLine={false} tick={{fill: 'var(--med-text-muted)', fontSize: 12}} />
                                     <Tooltip 
-                                        contentStyle={{backgroundColor: '#0a1a0f', borderColor: '#1a3d25', borderRadius: '8px', color: '#e8f5e9'}}
-                                        itemStyle={{color: '#e8f5e9'}}
+                                        contentStyle={{backgroundColor: 'var(--med-bg)', borderColor: 'var(--med-border)', borderRadius: '8px', color: 'var(--med-text)'}}
+                                        itemStyle={{color: 'var(--med-text)'}}
                                     />
-                                    <Line type="monotone" dataKey="score" stroke="#00e676" strokeWidth={3} dot={{fill: '#0a1a0f', stroke: '#00e676', strokeWidth: 2, r: 4}} activeDot={{r: 6, fill: '#00e676'}} />
+                                    <Line type="monotone" dataKey="score" stroke="var(--med-accent)" strokeWidth={3} dot={{fill: 'var(--med-bg)', stroke: 'var(--med-accent)', strokeWidth: 2, r: 4}} activeDot={{r: 6, fill: 'var(--med-accent)'}} />
                                 </LineChart>
                             </ResponsiveContainer>
                         </div>
@@ -247,19 +247,19 @@ export default function Dashboard({
                 </div>
 
                 {/* Recent Results Table */}
-                <div className="bg-[#0f2317] border border-[#1a3d25] rounded-2xl overflow-hidden">
-                    <div className="p-5 border-b border-[#1a3d25] flex items-center justify-between">
+                <div className="bg-med-card border border-med-border rounded-2xl overflow-hidden transition-colors duration-300">
+                    <div className="p-5 border-b border-med-border flex items-center justify-between">
                         <h3 className="font-semibold">Résultats récents</h3>
                         <button 
                           onClick={() => onNavigate?.('qcm')} 
-                          className="text-xs text-[#00e676] hover:underline"
+                          className="text-xs text-med-accent hover:underline"
                         >
                           Voir tout
                         </button>
                     </div>
                     <div className="overflow-x-auto">
                         <table className="w-full text-sm text-left">
-                            <thead className="bg-[#0a1a0f] text-[#6daa80] uppercase text-xs">
+                            <thead className="bg-med-bg text-med-text-muted uppercase text-xs">
                                 <tr>
                                     <th className="px-6 py-3 font-medium">Matière</th>
                                     <th className="px-6 py-3 font-medium">Score</th>
@@ -267,25 +267,25 @@ export default function Dashboard({
                                     <th className="px-6 py-3 font-medium">Statut</th>
                                 </tr>
                             </thead>
-                            <tbody className="divide-y divide-[#1a3d25]">
+                            <tbody className="divide-y divide-med-border">
                                 {scores.length === 0 ? (
                                     <tr>
-                                        <td colSpan={4} className="px-6 py-8 text-center text-[#6daa80]">
+                                        <td colSpan={4} className="px-6 py-8 text-center text-med-text-muted">
                                             Aucun résultat disponible
                                         </td>
                                     </tr>
                                 ) : (
                                     scores.slice(0, 5).map((score, idx) => (
-                                        <tr key={idx} className="hover:bg-[#1a3d25]/30 transition-colors">
+                                        <tr key={idx} className="hover:bg-med-border/30 transition-colors">
                                             <td className="px-6 py-4 font-medium">{score.subject}</td>
                                             <td className="px-6 py-4">{score.score}%</td>
-                                            <td className="px-6 py-4 text-[#6daa80]">{score.date}</td>
+                                            <td className="px-6 py-4 text-med-text-muted">{score.date}</td>
                                             <td className="px-6 py-4">
                                                 <span className={cn(
                                                     "px-2.5 py-0.5 rounded-full text-xs font-medium border",
                                                     score.score >= 50 
-                                                        ? "bg-[#00e676]/10 text-[#00e676] border-[#00e676]/20" 
-                                                        : "bg-[#ff5252]/10 text-[#ff5252] border-[#ff5252]/20"
+                                                        ? "bg-med-accent/10 text-med-accent border-med-accent/20" 
+                                                        : "bg-med-danger/10 text-med-danger border-med-danger/20"
                                                 )}>
                                                     {score.score >= 50 ? 'Validé' : 'Échoué'}
                                                 </span>
@@ -304,14 +304,14 @@ export default function Dashboard({
                                 <Timer addNotification={addNotification} />
 
                 {/* Calendar */}
-                <div className="bg-[#0f2317] border border-[#1a3d25] rounded-2xl p-5">
+                <div className="bg-med-card border border-med-border rounded-2xl p-5 transition-colors duration-300">
                     <div className="flex items-center justify-between mb-4">
                         <h3 className="font-semibold">Calendrier</h3>
-                        <span className="text-xs text-[#6daa80]">{format(new Date(), 'MMMM yyyy', { locale: fr })}</span>
+                        <span className="text-xs text-med-text-muted">{format(new Date(), 'MMMM yyyy', { locale: fr })}</span>
                     </div>
                     <div className="grid grid-cols-7 gap-1 text-center text-xs mb-2">
                         {['L', 'M', 'M', 'J', 'V', 'S', 'D'].map((d, i) => (
-                            <div key={i} className="text-[#6daa80] py-1">{d}</div>
+                            <div key={i} className="text-med-text-muted py-1">{d}</div>
                         ))}
                     </div>
                     <div className="grid grid-cols-7 gap-1 text-center text-[11px] sm:text-sm">
@@ -320,19 +320,19 @@ export default function Dashboard({
                                 key={i}
                                 onClick={() => handleDateClick(day.date)}
                                 className={cn(
-                                    "aspect-square flex items-center justify-center rounded-lg cursor-pointer hover:bg-[#1a3d25]/60 transition-colors relative font-medium",
+                                    "aspect-square flex items-center justify-center rounded-lg cursor-pointer hover:bg-med-border/60 transition-colors relative font-medium",
                                     {
-                                        "bg-[#00e676] text-[#0a1a0f] font-bold hover:bg-[#00e676]": day.isToday,
-                                        "text-[#00e676]": !day.isToday && day.hasActivity && !day.hasEvent,
-                                        "text-[#0a1a0f] font-bold": day.hasEvent,
+                                        "bg-med-accent text-med-bg font-bold hover:bg-med-accent": day.isToday,
+                                        "text-med-accent": !day.isToday && day.hasActivity && !day.hasEvent,
+                                        "text-med-bg font-bold": day.hasEvent,
                                     }
                                 )}
-                                style={day.hasEvent ? { backgroundColor: day.eventColor || '#00e676' } : {}}
+                                style={day.hasEvent ? { backgroundColor: day.eventColor || 'var(--med-accent)' } : {}}
                             >
                                 {format(day.date, 'd')}
                                 
                                 {!day.isToday && day.hasActivity && !day.hasEvent && (
-                                    <div className="absolute bottom-1 w-1 h-1 rounded-full bg-[#00e676]"></div>
+                                    <div className="absolute bottom-1 w-1 h-1 rounded-full bg-med-accent"></div>
                                 )}
                             </div>
                         ))}
@@ -340,26 +340,26 @@ export default function Dashboard({
                 </div>
 
                 {/* Shortcuts */}
-                <div className="bg-[#0f2317] border border-[#1a3d25] rounded-2xl p-5">
+                <div className="bg-med-card border border-med-border rounded-2xl p-5 transition-colors duration-300">
                     <h3 className="font-semibold mb-4">Raccourcis</h3>
                     <div className="space-y-3">
-                        <button onClick={() => onNavigate?.('qcm')} className="w-full flex items-center justify-between p-3 rounded-xl bg-[#0a1a0f] border border-[#1a3d25] hover:border-[#00e676] transition-colors group">
+                        <button onClick={() => onNavigate?.('qcm')} className="w-full flex items-center justify-between p-3 rounded-xl bg-med-bg border border-med-border hover:border-med-accent transition-colors group">
                             <div className="flex items-center gap-3">
-                                <div className="p-2 bg-[#00e676]/10 rounded-lg text-[#00e676]">
+                                <div className="p-2 bg-med-accent/10 rounded-lg text-med-accent">
                                     <FileText size={16} />
                                 </div>
                                 <span className="text-sm font-medium">Nouveau QCM</span>
                             </div>
-                            <ChevronRight size={16} className="text-[#6daa80] group-hover:text-[#00e676] transition-colors" />
+                            <ChevronRight size={16} className="text-med-text-muted group-hover:text-med-accent transition-colors" />
                         </button>
-                        <button onClick={() => onNavigate?.('assistant')} className="w-full flex items-center justify-between p-3 rounded-xl bg-[#0a1a0f] border border-[#1a3d25] hover:border-[#00e676] transition-colors group">
+                        <button onClick={() => onNavigate?.('assistant')} className="w-full flex items-center justify-between p-3 rounded-xl bg-med-bg border border-med-border hover:border-med-accent transition-colors group">
                             <div className="flex items-center gap-3">
-                                <div className="p-2 bg-[#00e676]/10 rounded-lg text-[#00e676]">
+                                <div className="p-2 bg-med-accent/10 rounded-lg text-med-accent">
                                     <Bot size={16} />
                                 </div>
                                 <span className="text-sm font-medium">Poser une question</span>
                             </div>
-                            <ChevronRight size={16} className="text-[#6daa80] group-hover:text-[#00e676] transition-colors" />
+                            <ChevronRight size={16} className="text-med-text-muted group-hover:text-med-accent transition-colors" />
                         </button>
                     </div>
                 </div>
@@ -375,17 +375,17 @@ export default function Dashboard({
 
 function StatCard({ icon, label, value, subValue }: { icon: React.ReactNode, label: string, value: string, subValue?: string }) {
   return (
-    <div className="bg-[#0f2317] border border-[#1a3d25] rounded-2xl p-5 shadow-lg">
+    <div className="bg-med-card border border-med-border rounded-2xl p-5 shadow-lg transition-colors duration-300">
       <div className="flex items-start justify-between mb-4">
-        <div className="p-2 bg-[#0a1a0f] rounded-xl border border-[#1a3d25]">
+        <div className="p-2 bg-med-bg rounded-xl border border-med-border">
           {React.cloneElement(icon as React.ReactElement<any>, { size: 20 })}
         </div>
-        <MoreHorizontal size={16} className="text-[#6daa80] cursor-pointer" />
+        <MoreHorizontal size={16} className="text-med-text-muted cursor-pointer" />
       </div>
       <div>
-        <div className="text-2xl font-bold text-[#e8f5e9] mb-1">{value}</div>
-        <div className="text-xs font-medium text-[#6daa80] uppercase tracking-wider">{label}</div>
-        {subValue && <div className="text-xs text-[#3d6b4d] mt-1">{subValue}</div>}
+        <div className="text-2xl font-bold text-med-text mb-1">{value}</div>
+        <div className="text-xs font-medium text-med-text-muted uppercase tracking-wider">{label}</div>
+        {subValue && <div className="text-xs text-med-text-dim mt-1">{subValue}</div>}
       </div>
     </div>
   );

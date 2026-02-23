@@ -162,9 +162,9 @@ export default function QCMPage({ refreshData, session }: QCMPageProps) {
   };
 
   const getScoreColor = (percentage: number) => {
-    if (percentage >= 80) return '#00e676';
-    if (percentage >= 60) return '#ffab40';
-    return '#ff5252';
+    if (percentage >= 80) return 'var(--med-accent)';
+    if (percentage >= 60) return 'var(--med-warning)';
+    return 'var(--med-danger)';
   };
 
   const getScoreMessage = (percentage: number) => {
@@ -174,14 +174,14 @@ export default function QCMPage({ refreshData, session }: QCMPageProps) {
   };
 
   return (
-    <div className="flex flex-col h-full bg-[#0a1a0f] overflow-hidden font-sans text-[#e8f5e9]">
+    <div className="flex flex-col h-full bg-med-bg overflow-hidden font-sans text-med-text transition-colors duration-300">
       {/* Sub-nav */}
-      <div className="flex border-b border-[#1a3d25] bg-[#0a1a0f] sticky top-0 z-10 shrink-0">
+      <div className="flex border-b border-med-border bg-med-bg sticky top-0 z-10 shrink-0 transition-colors duration-300">
         <button 
           onClick={() => setView('generator')}
           className={cn(
             "flex-1 py-3 sm:py-4 text-[12px] sm:text-[13px] font-bold transition-all border-b-2",
-            view === 'generator' ? "text-[#00e676] border-[#00e676]" : "text-[#6daa80] border-transparent hover:text-[#e8f5e9]"
+            view === 'generator' ? "text-med-accent border-med-accent" : "text-med-text-muted border-transparent hover:text-med-text"
           )}
         >
           IA
@@ -190,7 +190,7 @@ export default function QCMPage({ refreshData, session }: QCMPageProps) {
           onClick={() => setView('history')}
           className={cn(
             "flex-1 py-3 sm:py-4 text-[12px] sm:text-[13px] font-bold transition-all border-b-2",
-            view === 'history' ? "text-[#00e676] border-[#00e676]" : "text-[#6daa80] border-transparent hover:text-[#e8f5e9]"
+            view === 'history' ? "text-med-accent border-med-accent" : "text-med-text-muted border-transparent hover:text-med-text"
           )}
         >
           Historique
@@ -199,36 +199,36 @@ export default function QCMPage({ refreshData, session }: QCMPageProps) {
           onClick={() => setView('manual')}
           className={cn(
             "flex-1 py-3 sm:py-4 text-[12px] sm:text-[13px] font-bold transition-all border-b-2",
-            view === 'manual' ? "text-[#00e676] border-[#00e676]" : "text-[#6daa80] border-transparent hover:text-[#e8f5e9]"
+            view === 'manual' ? "text-med-accent border-med-accent" : "text-med-text-muted border-transparent hover:text-med-text"
           )}
         >
           Créer
         </button>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-6 pb-24">
+      <div className="flex-1 overflow-y-auto p-6 pb-32">
         {view === 'generator' && (
           <div className="space-y-8">
             <div className="mb-8">
-              <h1 className="text-[18px] font-bold text-white">Générateur de QCM/QCS</h1>
-              <p className="text-[#6daa80] text-[12px]">Posez un sujet médical et testez vos connaissances avec un mix de questions.</p>
+              <h1 className="text-[18px] font-bold text-med-text">Générateur de QCM/QCS</h1>
+              <p className="text-med-text-muted text-[12px]">Posez un sujet médical et testez vos connaissances avec un mix de questions.</p>
             </div>
 
             <div className="space-y-6 mb-8">
               <div className="space-y-2">
-                <label className="text-[12px] font-medium text-[#6daa80] uppercase tracking-wide">Sujet de l'examen</label>
+                <label className="text-[12px] font-medium text-med-text-muted uppercase tracking-wide">Sujet de l'examen</label>
                 <input
                   type="text"
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
                   placeholder="Ex: Diabète type 2, Insuffisance cardiaque, HTA..."
-                  className="w-full bg-[#081508] border border-[#1a3d25] rounded-[10px] py-3 px-4 text-[#e8f5e9] text-[14px] placeholder-[#3d6b4d] focus:outline-none focus:border-[#00e676] focus:ring-2 focus:ring-[#00e676]/10 transition-all"
+                  className="w-full bg-med-input border border-med-border rounded-[10px] py-3 px-4 text-med-text text-[14px] placeholder-med-text-dim focus:outline-none focus:border-med-accent focus:ring-2 focus:ring-med-accent/10 transition-all"
                   disabled={isLoading || qcms.length > 0}
                 />
               </div>
 
               <div className="space-y-2">
-                <label className="text-[12px] font-medium text-[#6daa80]">Nombre de questions</label>
+                <label className="text-[12px] font-medium text-med-text-muted">Nombre de questions</label>
                 <div className="flex flex-wrap gap-2">
                     {counts.map((c) => (
                     <button
@@ -238,8 +238,8 @@ export default function QCMPage({ refreshData, session }: QCMPageProps) {
                         className={cn(
                         "px-4 py-1.5 rounded-[20px] text-[13px] transition-all border",
                         count === c
-                            ? "bg-[#00e676] text-[#0a1a0f] border-transparent font-bold"
-                            : "bg-transparent border-[#1a3d25] text-[#6daa80] hover:border-[#00e676]/50"
+                            ? "bg-med-accent text-med-bg border-transparent font-bold"
+                            : "bg-transparent border-med-border text-med-text-muted hover:border-med-accent/50"
                         )}
                     >
                         {c}
@@ -252,11 +252,11 @@ export default function QCMPage({ refreshData, session }: QCMPageProps) {
                 <button
                   onClick={generateQCM}
                   disabled={isLoading || !subject.trim()}
-                  className="w-full bg-[#00e676] hover:bg-[#00b85e] disabled:bg-[#1a3d25] disabled:text-[#3d6b4d] disabled:cursor-not-allowed text-[#0a1a0f] font-bold py-3.5 rounded-[12px] text-[15px] transition-all flex items-center justify-center gap-2"
+                  className="w-full bg-med-accent hover:bg-med-accent-dark disabled:bg-med-border disabled:text-med-text-dim disabled:cursor-not-allowed text-med-bg font-bold py-3.5 rounded-[12px] text-[15px] transition-all flex items-center justify-center gap-2"
                 >
                   {isLoading ? (
                     <>
-                      <div className="w-5 h-5 border-2 border-[#3d6b4d] border-t-[#00e676] rounded-full animate-spin" />
+                      <div className="w-5 h-5 border-2 border-med-text-dim border-t-med-accent rounded-full animate-spin" />
                       Génération en cours...
                     </>
                   ) : (
@@ -272,7 +272,7 @@ export default function QCMPage({ refreshData, session }: QCMPageProps) {
                 <motion.div 
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="bg-[#ff5252]/10 border border-[#ff5252]/30 rounded-[12px] p-4 flex items-center gap-3 text-[#ff5252]"
+                  className="bg-med-danger/10 border border-med-danger/30 rounded-[12px] p-4 flex items-center gap-3 text-med-danger"
                 >
                   <AlertCircle size={20} />
                   <span className="text-sm font-medium">{error}</span>
@@ -286,12 +286,12 @@ export default function QCMPage({ refreshData, session }: QCMPageProps) {
                   <motion.div 
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    className="bg-[#0f2317] border border-[#1a3d25] rounded-[14px] p-6 text-center mb-4"
+                    className="bg-med-card border border-med-border rounded-[14px] p-6 text-center mb-4"
                   >
                     <div className="text-[48px] font-black leading-none mb-2" style={{ color: getScoreColor(scoreData.percentage) }}>
                       {scoreData.percentage}%
                     </div>
-                    <div className="text-[#e8f5e9] text-[14px] font-medium">
+                    <div className="text-med-text text-[14px] font-medium">
                       {scoreData.correct} / {scoreData.total} bonnes réponses
                     </div>
                     <div className="text-[14px] font-bold mt-2" style={{ color: getScoreColor(scoreData.percentage) }}>
@@ -307,11 +307,11 @@ export default function QCMPage({ refreshData, session }: QCMPageProps) {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: qIndex * 0.05 }}
-                      className="bg-[#0f2317] border border-[#1a3d25] rounded-[14px] p-4"
+                      className="bg-med-card border border-med-border rounded-[14px] p-4"
                     >
                       <div className="flex items-start gap-3 mb-4">
-                        <span className="text-[#00e676] font-bold text-sm bg-[#00e676]/10 px-2 py-0.5 rounded-md">{qcm.type.toUpperCase()}</span>
-                        <p className="text-[#e8f5e9] text-[14px] leading-relaxed pt-0.5">{qcm.q}</p>
+                        <span className="text-med-accent font-bold text-sm bg-med-accent/10 px-2 py-0.5 rounded-md">{qcm.type.toUpperCase()}</span>
+                        <p className="text-med-text text-[14px] leading-relaxed pt-0.5">{qcm.q}</p>
                       </div>
 
                       <div className="space-y-1.5">
@@ -329,25 +329,25 @@ export default function QCMPage({ refreshData, session }: QCMPageProps) {
 
                           if (isSubmitted) {
                             if (isCorrect) {
-                              stateStyle = "bg-[#00e676]/10 border-[#00e676] text-[#00e676] font-medium";
+                              stateStyle = "bg-med-accent/10 border-med-accent text-med-accent font-medium";
                             } else if (isSelected) {
-                              stateStyle = "bg-[#ff5252]/10 border-[#ff5252] text-[#ff5252] font-medium";
+                              stateStyle = "bg-med-danger/10 border-med-danger text-med-danger font-medium";
                             } else {
-                              stateStyle = "bg-[#081508] border-[#1a3d25] text-[#6daa80] opacity-60";
+                              stateStyle = "bg-med-input border-med-border text-med-text-muted opacity-60";
                             }
                           } else if (isSelected) {
-                            stateStyle = "bg-[#00e676] text-[#0a1a0f] border-[#00e676] font-bold shadow-[0_0_10px_rgba(0,230,118,0.4)]";
+                            stateStyle = "bg-med-accent text-med-bg border-med-accent font-bold shadow-[0_0_10px_var(--med-accent)]/40";
                           } else {
-                            stateStyle = "bg-[#081508] border-[#1a3d25] text-[#6daa80] hover:border-[#00e676] hover:text-[#e8f5e9] hover:bg-[#00e676]/5";
+                            stateStyle = "bg-med-input border-med-border text-med-text-muted hover:border-med-accent hover:text-med-text hover:bg-med-accent/5";
                           }
 
                           const indicator = qcm.type === 'qcm' ? (
-                              <div className={cn("w-4 h-4 rounded border-2 flex-shrink-0 transition-all", isSelected ? "bg-[#0a1a0f] border-[#0a1a0f]" : "border-current")}>
-                                  {isSelected && <CheckCircle size={12} className="text-[#00e676]" />} 
+                              <div className={cn("w-4 h-4 rounded border-2 flex-shrink-0 transition-all", isSelected ? "bg-med-bg border-med-bg" : "border-current")}>
+                                  {isSelected && <CheckCircle size={12} className="text-med-accent" />} 
                               </div>
                           ) : (
-                              <div className={cn("w-4 h-4 rounded-full border-2 flex-shrink-0 flex items-center justify-center transition-all", isSelected ? "border-[#0a1a0f]" : "border-current")}>
-                                  {isSelected && <div className="w-2 h-2 rounded-full bg-[#0a1a0f]" />} 
+                              <div className={cn("w-4 h-4 rounded-full border-2 flex-shrink-0 flex items-center justify-center transition-all", isSelected ? "border-med-bg" : "border-current")}>
+                                  {isSelected && <div className="w-2 h-2 rounded-full bg-med-bg" />} 
                               </div>
                           );
 
@@ -360,8 +360,8 @@ export default function QCMPage({ refreshData, session }: QCMPageProps) {
                             >
                               {!isSubmitted && indicator}
                               <span className="flex-1">{option}</span>
-                              {isSubmitted && isCorrect && <CheckCircle size={16} className="text-[#00e676]" />}
-                              {isSubmitted && isSelected && !isCorrect && <XCircle size={16} className="text-[#ff5252]" />}
+                              {isSubmitted && isCorrect && <CheckCircle size={16} className="text-med-accent" />}
+                              {isSubmitted && isSelected && !isCorrect && <XCircle size={16} className="text-med-danger" />}
                             </button>
                           );
                         })}
@@ -371,10 +371,10 @@ export default function QCMPage({ refreshData, session }: QCMPageProps) {
                         <motion.div 
                           initial={{ opacity: 0, height: 0 }}
                           animate={{ opacity: 1, height: 'auto' }}
-                          className="mt-4 bg-[#081508] border-l-[3px] border-[#00e676] rounded-r-[8px] p-3"
+                          className="mt-4 bg-med-input border-l-[3px] border-med-accent rounded-r-[8px] p-3"
                         >
-                          <span className="text-[#00e676] font-bold text-[12px] mr-2 not-italic">Explication:</span>
-                          <span className="text-[#6daa80] text-[12px] italic">{qcm.explication}</span>
+                          <span className="text-med-accent font-bold text-[12px] mr-2 not-italic">Explication:</span>
+                          <span className="text-med-text-muted text-[12px] italic">{qcm.explication}</span>
                         </motion.div>
                       )}
                     </motion.div>
@@ -386,7 +386,7 @@ export default function QCMPage({ refreshData, session }: QCMPageProps) {
                     (Object.keys(userAnswers).length === qcms.length) && (
                       <button
                         onClick={handleSubmit}
-                        className="w-full bg-[#00e676] hover:bg-[#00b85e] text-[#0a1a0f] font-bold py-3.5 rounded-[12px] text-[15px] transition-all"
+                        className="w-full bg-med-accent hover:bg-med-accent-dark text-med-bg font-bold py-3.5 rounded-[12px] text-[15px] transition-all"
                       >
                         Soumettre ({Object.keys(userAnswers).length}/{qcms.length} réponses)
                       </button>
@@ -394,7 +394,7 @@ export default function QCMPage({ refreshData, session }: QCMPageProps) {
                   ) : (
                     <button
                       onClick={handleReset}
-                      className="w-full bg-transparent border border-[#1a3d25] hover:bg-[#1a3d25] text-[#6daa80] font-medium py-2.5 rounded-[10px] text-[14px] transition-all flex items-center justify-center gap-2"
+                      className="w-full bg-transparent border border-med-border hover:bg-med-border text-med-text-muted font-medium py-2.5 rounded-[10px] text-[14px] transition-all flex items-center justify-center gap-2"
                     >
                       <RefreshCw size={16} />
                       Nouveau Examen
@@ -406,7 +406,7 @@ export default function QCMPage({ refreshData, session }: QCMPageProps) {
           </div>
         )}
         
-        {view === 'history' && <QCMHistory session={session} />}
+        {view === 'history' && <QCMHistory session={session} refreshData={refreshData} />}
         {view === 'manual' && <QCMManual session={session} refreshData={refreshData} />}
       </div>
     </div>
@@ -470,31 +470,31 @@ function QCMManual({ session, refreshData }: { session: any, refreshData: () => 
   return (
     <div className="space-y-6">
       <div className="mb-6">
-        <h1 className="text-[18px] font-bold text-white">Création Manuelle</h1>
-        <p className="text-[#6daa80] text-[12px]">Créez vos propres fiches de révision sous forme de QCM.</p>
+        <h1 className="text-[18px] font-bold text-med-text">Création Manuelle</h1>
+        <p className="text-med-text-muted text-[12px]">Créez vos propres fiches de révision sous forme de QCM.</p>
       </div>
 
       <div className="space-y-4">
         <div className="space-y-2">
-          <label className="text-[12px] font-medium text-[#6daa80] uppercase">Sujet</label>
+          <label className="text-[12px] font-medium text-med-text-muted uppercase">Sujet</label>
           <input
             type="text"
             value={subject}
             onChange={(e) => setSubject(e.target.value)}
             placeholder="Ex: Sémiologie Cardiaque"
-            className="w-full bg-[#081508] border border-[#1a3d25] rounded-[10px] py-3 px-4 text-[#e8f5e9] text-[14px] focus:outline-none focus:border-[#00e676]"
+            className="w-full bg-med-input border border-med-border rounded-[10px] py-3 px-4 text-med-text text-[14px] focus:outline-none focus:border-med-accent"
           />
         </div>
 
         <div className="space-y-6">
           {questions.map((q, qIdx) => (
-            <div key={qIdx} className="bg-[#0f2317] border border-[#1a3d25] rounded-[14px] p-4 space-y-4">
+            <div key={qIdx} className="bg-med-card border border-med-border rounded-[14px] p-4 space-y-4">
               <div className="flex items-center justify-between">
-                <span className="text-[12px] font-bold text-[#00e676]">Question {qIdx + 1}</span>
+                <span className="text-[12px] font-bold text-med-accent">Question {qIdx + 1}</span>
                 <select 
                   value={q.type}
                   onChange={(e) => updateQuestion(qIdx, 'type', e.target.value)}
-                  className="bg-[#0a1a0f] border border-[#1a3d25] text-[10px] rounded px-2 py-1 text-[#6daa80]"
+                  className="bg-med-input border border-med-border text-[10px] rounded px-2 py-1 text-med-text-muted"
                 >
                   <option value="qcs">QCS (Unique)</option>
                   <option value="qcm">QCM (Multiple)</option>
@@ -505,7 +505,7 @@ function QCMManual({ session, refreshData }: { session: any, refreshData: () => 
                 value={q.q}
                 onChange={(e) => updateQuestion(qIdx, 'q', e.target.value)}
                 placeholder="Votre question..."
-                className="w-full bg-[#0a1a0f] border border-[#1a3d25] rounded-[10px] p-3 text-sm text-[#e8f5e9] focus:outline-none focus:border-[#00e676] min-h-[80px]"
+                className="w-full bg-med-input border border-med-border rounded-[10px] p-3 text-sm text-med-text focus:outline-none focus:border-med-accent min-h-[80px]"
               />
 
               <div className="grid grid-cols-1 gap-2">
@@ -523,27 +523,27 @@ function QCMManual({ session, refreshData }: { session: any, refreshData: () => 
                           updateQuestion(qIdx, 'correct', next);
                         }
                       }}
-                      className="accent-[#00e676]"
+                      className="accent-med-accent"
                     />
                     <input
                       type="text"
                       value={opt}
                       onChange={(e) => updateOption(qIdx, oIdx, e.target.value)}
                       placeholder={`Option ${String.fromCharCode(65 + oIdx)}`}
-                      className="flex-1 bg-[#0a1a0f] border border-[#1a3d25] rounded-[8px] px-3 py-2 text-xs text-[#e8f5e9] focus:outline-none focus:border-[#00e676]"
+                      className="flex-1 bg-med-input border border-med-border rounded-[8px] px-3 py-2 text-xs text-med-text focus:outline-none focus:border-med-accent"
                     />
                   </div>
                 ))}
               </div>
 
               <div className="space-y-2">
-                <label className="text-[10px] font-bold text-[#6daa80] uppercase">Explication</label>
+                <label className="text-[10px] font-bold text-med-text-muted uppercase">Explication</label>
                 <input
                   type="text"
                   value={q.explication}
                   onChange={(e) => updateQuestion(qIdx, 'explication', e.target.value)}
                   placeholder="Pourquoi est-ce la bonne réponse ?"
-                  className="w-full bg-[#0a1a0f] border border-[#1a3d25] rounded-[8px] px-3 py-2 text-xs text-[#e8f5e9] focus:outline-none focus:border-[#00e676]"
+                  className="w-full bg-med-input border border-med-border rounded-[8px] px-3 py-2 text-xs text-med-text focus:outline-none focus:border-med-accent"
                 />
               </div>
             </div>
@@ -553,13 +553,13 @@ function QCMManual({ session, refreshData }: { session: any, refreshData: () => 
         <div className="flex gap-4">
           <button
             onClick={addQuestion}
-            className="flex-1 bg-transparent border border-[#1a3d25] text-[#6daa80] py-3 rounded-[12px] text-sm font-bold hover:bg-[#1a3d25] transition-all"
+            className="flex-1 bg-transparent border border-med-border text-med-text-muted py-3 rounded-[12px] text-sm font-bold hover:bg-med-border transition-all"
           >
             + Ajouter Question
           </button>
           <button
             onClick={saveQuiz}
-            className="flex-1 bg-[#00e676] text-[#0a1a0f] py-3 rounded-[12px] text-sm font-bold hover:bg-[#00b85e] transition-all"
+            className="flex-1 bg-med-accent text-med-bg py-3 rounded-[12px] text-sm font-bold hover:bg-med-accent-dark transition-all"
           >
             Enregistrer Quiz
           </button>
@@ -569,7 +569,7 @@ function QCMManual({ session, refreshData }: { session: any, refreshData: () => 
   );
 }
 
-function QCMHistory({ session }: { session: any }) {
+function QCMHistory({ session, refreshData }: { session: any, refreshData: () => void }) {
   const [history, setHistory] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -602,6 +602,7 @@ function QCMHistory({ session }: { session: any }) {
       
       if (error) throw error;
       setHistory(prev => prev.filter(item => item.id !== id));
+      refreshData();
     } catch (e) {
       console.error(e);
     }
@@ -610,8 +611,8 @@ function QCMHistory({ session }: { session: any }) {
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center h-64 gap-4">
-        <div className="w-8 h-8 border-2 border-[#1a3d25] border-t-[#00e676] rounded-full animate-spin" />
-        <p className="text-[#6daa80] text-sm">Chargement de l'historique...</p>
+        <div className="w-8 h-8 border-2 border-med-border border-t-med-accent rounded-full animate-spin" />
+        <p className="text-med-text-muted text-sm">Chargement de l'historique...</p>
       </div>
     );
   }
@@ -619,24 +620,24 @@ function QCMHistory({ session }: { session: any }) {
   return (
     <div className="space-y-6">
       <div className="mb-6">
-        <h1 className="text-[18px] font-bold text-white">Votre Historique</h1>
-        <p className="text-[#6daa80] text-[12px]">Retrouvez tous vos examens passés et suivez votre progression.</p>
+        <h1 className="text-[18px] font-bold text-med-text">Votre Historique</h1>
+        <p className="text-med-text-muted text-[12px]">Retrouvez tous vos examens passés et suivez votre progression.</p>
       </div>
 
       {history.length === 0 ? (
-        <div className="bg-[#0f2317] border border-[#1a3d25] rounded-[14px] p-8 text-center">
-          <p className="text-[#6daa80] text-sm">Vous n'avez pas encore passé d'examen.</p>
+        <div className="bg-med-card border border-med-border rounded-[14px] p-8 text-center">
+          <p className="text-med-text-muted text-sm">Vous n'avez pas encore passé d'examen.</p>
         </div>
       ) : (
         <div className="space-y-4">
           {history.map((item, idx) => (
-            <div key={idx} className="bg-[#0f2317] border border-[#1a3d25] rounded-[14px] p-4 flex items-center justify-between group">
+            <div key={idx} className="bg-med-card border border-med-border rounded-[14px] p-4 flex items-center justify-between group">
               <div className="flex items-center gap-4">
                 <div className="space-y-1">
-                  <div className="text-sm font-bold text-[#e8f5e9]">{item.subject}</div>
-                  <div className="text-[10px] text-[#6daa80] uppercase flex items-center gap-2">
+                  <div className="text-sm font-bold text-med-text">{item.subject}</div>
+                  <div className="text-[10px] text-med-text-muted uppercase flex items-center gap-2">
                     <span>{new Date(item.created_at).toLocaleDateString('fr-FR')}</span>
-                    <span className="w-1 h-1 rounded-full bg-[#1a3d25]" />
+                    <span className="w-1 h-1 rounded-full bg-med-border" />
                     <span>{item.correct}/{item.total} pts</span>
                   </div>
                 </div>
@@ -645,14 +646,14 @@ function QCMHistory({ session }: { session: any }) {
                 <div className="text-right">
                   <div className={cn(
                     "text-lg font-black",
-                    item.score >= 80 ? "text-[#00e676]" : item.score >= 60 ? "text-[#ffab40]" : "text-[#ff5252]"
+                    item.score >= 80 ? "text-med-accent" : item.score >= 60 ? "text-med-warning" : "text-med-danger"
                   )}>
                     {item.score}%
                   </div>
                 </div>
                 <button 
                   onClick={() => deleteHistoryItem(item.id)}
-                  className="p-2 text-[#ff5252] opacity-0 group-hover:opacity-100 transition-opacity hover:bg-[#ff5252]/10 rounded-lg"
+                  className="p-2 text-med-danger opacity-0 group-hover:opacity-100 transition-opacity hover:bg-med-danger/10 rounded-lg"
                 >
                   <Trash2 size={16} />
                 </button>
